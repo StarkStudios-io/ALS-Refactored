@@ -95,19 +95,19 @@ private:
 
 	void Input_OnMove(const FInputActionValue& ActionValue);
 
-	void Input_OnSprint(const FInputActionValue& ActionValue);
+	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
 
 	void Input_OnWalk();
 
 	void Input_OnCrouch();
 
-	void Input_OnJump(const FInputActionValue& ActionValue);
+	virtual void Input_OnJump(const FInputActionValue& ActionValue);
 
 	void Input_OnAim(const FInputActionValue& ActionValue);
 
 	void Input_OnRagdoll();
 
-	void Input_OnRoll();
+	virtual void Input_OnRoll();
 
 	void Input_OnRotationMode();
 
