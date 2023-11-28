@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../../../GASCompanion/Source/GASCompanion/Public/ModularGameplayActors/GSCModularPlayerStateCharacter.h"
 #include "GameFramework/Character.h"
 #include "State/AlsLocomotionState.h"
 #include "State/AlsMantlingState.h"
@@ -20,7 +19,7 @@ class UAlsAnimationInstance;
 class UAlsMantlingSettings;
 
 UCLASS(AutoExpandCategories = ("Settings|Als Character", "Settings|Als Character|Desired State", "State|Als Character"))
-class ALS_API AAlsCharacter : public AGSCModularPlayerStateCharacter
+class ALS_API AAlsCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
