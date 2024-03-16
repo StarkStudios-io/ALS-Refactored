@@ -16,7 +16,7 @@ public class ALSCamera : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new[]
 		{
-			"EngineSettings"
+			"EngineSettings",
 			"GameplayAbilities"
 		});
 	}
