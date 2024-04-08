@@ -153,6 +153,50 @@ void AAlsCharacter::DisplayDebugHeader(const UCanvas* Canvas, const FText& Heade
 void AAlsCharacter::DisplayDebugCurves(const UCanvas* Canvas, const float Scale,
                                        const float HorizontalLocation, float& VerticalLocation) const
 {
+	static TSet<FName> AlsCurves{
+		FName{TEXT("AllowAiming")},
+		FName{TEXT("AllowTransitions")},
+		FName{TEXT("FeetCrossing")},
+		FName{TEXT("FootLeftIk")},
+		FName{TEXT("FootLeftLock")},
+		FName{TEXT("FootPlanted")},
+		FName{TEXT("FootRightIk")},
+		FName{TEXT("FootRightLock")},
+		FName{TEXT("FootstepSoundBlock")},
+		FName{TEXT("HandLeftIk")},
+		FName{TEXT("HandRightIk")},
+		FName{TEXT("HipsDirectionLock")},
+		FName{TEXT("LayerArmLeft")},
+		FName{TEXT("LayerArmLeftAdditive")},
+		FName{TEXT("LayerArmLeftLocalSpace")},
+		FName{TEXT("LayerArmLeftSlot")},
+		FName{TEXT("LayerArmRight")},
+		FName{TEXT("LayerArmRightAdditive")},
+		FName{TEXT("LayerArmRightLocalSpace")},
+		FName{TEXT("LayerArmRightSlot")},
+		FName{TEXT("LayerHandLeft")},
+		FName{TEXT("LayerHandRight")},
+		FName{TEXT("LayerHead")},
+		FName{TEXT("LayerHeadAdditive")},
+		FName{TEXT("LayerHeadSlot")},
+		FName{TEXT("LayerLegs")},
+		FName{TEXT("LayerLegsSlot")},
+		FName{TEXT("LayerPelvis")},
+		FName{TEXT("LayerPelvisSlot")},
+		FName{TEXT("LayerSpine")},
+		FName{TEXT("LayerSpineAdditive")},
+		FName{TEXT("PoseCrouching")},
+		FName{TEXT("PoseGait")},
+		FName{TEXT("PoseGrounded")},
+		FName{TEXT("PoseInAir")},
+		FName{TEXT("PoseMoving")},
+		FName{TEXT("PoseStanding")},
+		FName{TEXT("RotationYawOffset")},
+		FName{TEXT("RotationYawSpeed")},
+		FName{TEXT("SprintBlock")},
+		FName{TEXT("ViewBlock")},
+	};
+	
 	VerticalLocation += 4.0f * Scale;
 
 	FCanvasTextItem Text{
@@ -172,6 +216,7 @@ void AAlsCharacter::DisplayDebugCurves(const UCanvas* Canvas, const float Scale,
 	GetMesh()->GetSkeletalMeshAsset()->GetSkeleton()->GetCurveMetaDataNames(CurveNames);
 
 	CurveNames.Sort([](const FName& A, const FName& B) { return A.LexicalLess(B); });
+	CurveNames = CurveNames.FilterByPredicate([](const FName& CurveName) { return AlsCurves.Contains(CurveName); });
 
 	TStringBuilder<32> CurveValueBuilder;
 
