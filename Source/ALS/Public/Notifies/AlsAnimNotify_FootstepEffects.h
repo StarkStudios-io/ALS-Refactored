@@ -202,7 +202,7 @@ class ALS_API UAlsAnimNotify_FootstepEffects : public UAnimNotify
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
 	TObjectPtr<UAlsFootstepEffectsSettings> FootstepEffectsSettings;
 
@@ -213,7 +213,7 @@ protected:
 	uint8 bSkipEffectsWhenInAir : 1 {false};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings|Sound")
-	uint8 bSpawnSound : 1 {true};
+	uint8 bSpawnSound : 1 {false};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings|Sound", Meta = (ClampMin = 0, ForceUnits = "x"))
 	float SoundVolumeMultiplier{1.0f};
