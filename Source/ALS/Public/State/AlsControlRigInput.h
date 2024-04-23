@@ -7,6 +7,8 @@ struct ALS_API FAlsControlRigInput
 {
 	GENERATED_BODY()
 
+	// TODO Replace bool with uint8 in future engine versions.
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
 	bool bUseHandIkBones{false};
 

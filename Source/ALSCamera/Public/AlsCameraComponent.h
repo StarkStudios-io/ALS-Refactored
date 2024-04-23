@@ -7,9 +7,10 @@
 class UAlsCameraSettings;
 class ACharacter;
 
-UCLASS(HideCategories = ("ComponentTick", "Clothing", "Physics", "MasterPoseComponent", "Collision", "AnimationRig",
-	"Lighting", "Deformer", "Rendering", "PathTracing", "HLOD", "Navigation", "VirtualTexture", "SkeletalMesh",
-	"LeaderPoseComponent", "Optimization", "LOD", "MaterialParameters", "TextureStreaming", "Mobile", "RayTracing"))
+UCLASS(ClassGroup = "ALS", Meta = (BlueprintSpawnableComponent),
+	HideCategories = ("ComponentTick", "Clothing", "Physics", "MasterPoseComponent", "Collision", "AnimationRig",
+		"Lighting", "Deformer", "Rendering", "PathTracing", "HLOD", "Navigation", "VirtualTexture", "SkeletalMesh",
+		"LeaderPoseComponent", "Optimization", "LOD", "MaterialParameters", "TextureStreaming", "Mobile", "RayTracing"))
 class ALSCAMERA_API UAlsCameraComponent : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
@@ -102,7 +103,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ALS|Camera", Meta = (ReturnDisplayName = "Trace Start"))
 	FVector GetThirdPersonTraceStartLocation() const;
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Camera")
+	UFUNCTION(BlueprintPure, Category = "ALS|Camera")
 	void GetViewInfo(FMinimalViewInfo& ViewInfo) const;
 
 private:
@@ -115,6 +116,8 @@ private:
 	FVector CalculatePivotOffset() const;
 
 	FVector CalculateCameraOffset() const;
+
+	float CalculateFovOffset() const;
 
 	FVector CalculateCameraTrace(const FVector& CameraTargetLocation, const FVector& PivotOffset,
 	                             float DeltaTime, bool bAllowLag, float& NewTraceDistanceRatio) const;

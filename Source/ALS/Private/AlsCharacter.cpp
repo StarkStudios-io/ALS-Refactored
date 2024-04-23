@@ -186,6 +186,14 @@ void AAlsCharacter::BeginPlay()
 	OnOverlayModeChanged(OverlayMode);
 }
 
+void AAlsCharacter::CalcCamera(const float DeltaTime, FMinimalViewInfo& ViewInfo)
+{
+	if (!OnCalculateCamera(DeltaTime, ViewInfo))
+	{
+		Super::CalcCamera(DeltaTime, ViewInfo);
+	}
+}
+
 void AAlsCharacter::PostNetReceiveLocationAndRotation()
 {
 	// AActor::PostNetReceiveLocationAndRotation() function is only called on simulated proxies, so there is no need to check roles here.
@@ -312,6 +320,11 @@ void AAlsCharacter::Restart()
 	Super::Restart();
 
 	ApplyDesiredStance();
+}
+
+bool AAlsCharacter::OnCalculateCamera_Implementation(float DeltaTime, FMinimalViewInfo& ViewInfo)
+{
+	return false;
 }
 
 void AAlsCharacter::RefreshMeshProperties() const
@@ -1685,9 +1698,10 @@ float AAlsCharacter::CalculateGroundedMovingRotationInterpolationSpeed() const
 	};
 
 	static constexpr auto MaxInterpolationSpeedMultiplier{3.0f};
-	static constexpr auto ReferenceViewYawSpeed{300.0f};
+	static constexpr auto ReferenceViewYawSpeedInverse{1.0f / 300.0f};
 
-	return InterpolationSpeed * UAlsMath::LerpClamped(1.0f, MaxInterpolationSpeedMultiplier, ViewState.YawSpeed / ReferenceViewYawSpeed);
+	return InterpolationSpeed * UAlsMath::LerpClamped(1.0f, MaxInterpolationSpeedMultiplier,
+	                                                  ViewState.YawSpeed * ReferenceViewYawSpeedInverse);
 }
 
 void AAlsCharacter::ApplyRotationYawSpeedAnimationCurve(const float DeltaTime)
