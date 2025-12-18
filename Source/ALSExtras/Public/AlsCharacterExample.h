@@ -8,7 +8,7 @@ class UAlsCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 
-UCLASS(AutoExpandCategories = ("Settings|Als Character Example", "State|Als Character Example"))
+UCLASS(AutoExpandCategories = ("Settings|Als Character Example"))
 class ALSEXTRAS_API AAlsCharacterExample : public AAlsCharacter
 {
 	GENERATED_BODY()
@@ -65,12 +65,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings|Als Character Example", Meta = (ClampMin = 0, ForceUnits = "x"))
 	float LookRightMouseSensitivity{1.0f};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings|Als Character Example",
-		Meta = (ClampMin = 0, ForceUnits = "deg/s"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings|Als Character Example", Meta = (ClampMin = 0, ForceUnits = "deg/s"))
 	float LookUpRate{90.0f};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings|Als Character Example",
-		Meta = (ClampMin = 0, ForceUnits = "deg/s"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings|Als Character Example", Meta = (ClampMin = 0, ForceUnits = "deg/s"))
 	float LookRightRate{240.0f};
 
 public:
@@ -88,7 +86,7 @@ protected:
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* Input) override;
 
-private:
+protected:
 	virtual void Input_OnLookMouse(const FInputActionValue& ActionValue);
 
 	virtual void Input_OnLook(const FInputActionValue& ActionValue);

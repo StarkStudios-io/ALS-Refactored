@@ -12,25 +12,22 @@ struct ALS_API FAlsRootMotionSource_Mantling : public FRootMotionSource
 
 public:
 	UPROPERTY()
-	TObjectPtr<const UAlsMantlingSettings> MantlingSettings{nullptr};
+	TObjectPtr<const UAlsMantlingSettings> MantlingSettings;
 
 	UPROPERTY()
 	TWeakObjectPtr<const UPrimitiveComponent> TargetPrimitive;
 
 	UPROPERTY()
-	FVector TargetRelativeLocation{ForceInit};
+	FVector StartLocation{ForceInit};
 
 	UPROPERTY()
-	FRotator TargetRelativeRotation{ForceInit};
+	FRotator StartRotation{ForceInit};
 
 	UPROPERTY()
-	FVector ActorFeetLocationOffset{ForceInit};
+	FVector TargetLocation{ForceInit};
 
 	UPROPERTY()
-	FRotator ActorRotationOffset{ForceInit};
-
-	UPROPERTY()
-	FVector TargetAnimationLocation{ForceInit};
+	FRotator TargetRotation{ForceInit};
 
 	UPROPERTY(Meta = (ClampMin = 0, ForceUnits = "s"))
 	float MontageStartTime{0.0f};
@@ -57,8 +54,8 @@ public:
 template <>
 struct TStructOpsTypeTraits<FAlsRootMotionSource_Mantling> : public TStructOpsTypeTraitsBase2<FAlsRootMotionSource_Mantling>
 {
-	enum
+	enum // NOLINT(performance-enum-size)
 	{
-		WithNetSerializer = true,
+		WithNetSerializer = true
 	};
 };

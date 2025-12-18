@@ -1,14 +1,14 @@
 #include "ALSModule.h"
 
-#if WITH_EDITOR
-#include "MessageLogModule.h"
-#endif
+#include "Utility/AlsLog.h"
 
 #if ALLOW_CONSOLE
 #include "Engine/Console.h"
 #endif
 
-#include "Utility/AlsLog.h"
+#if WITH_EDITOR
+#include "MessageLogModule.h"
+#endif
 
 IMPLEMENT_MODULE(FALSModule, ALS)
 
@@ -25,12 +25,12 @@ void FALSModule::StartupModule()
 #if WITH_EDITOR
 	auto& MessageLog{FModuleManager::LoadModuleChecked<FMessageLogModule>(FName{TEXTVIEW("MessageLog")})};
 
-	FMessageLogInitializationOptions Options;
-	Options.bShowFilters = true;
-	Options.bAllowClear = true;
-	Options.bDiscardDuplicates = true;
+	FMessageLogInitializationOptions MessageLogOptions;
+	MessageLogOptions.bShowFilters = true;
+	MessageLogOptions.bAllowClear = true;
+	MessageLogOptions.bDiscardDuplicates = true;
 
-	MessageLog.RegisterLogListing(AlsLog::MessageLogName, LOCTEXT("MessageLogLabel", "ALS"), Options);
+	MessageLog.RegisterLogListing(AlsLog::MessageLogName, LOCTEXT("MessageLogLabel", "ALS"), MessageLogOptions);
 #endif
 }
 

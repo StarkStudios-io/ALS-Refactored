@@ -13,7 +13,7 @@ struct ALS_API FAlsTransitionsState
 	uint8 bTransitionsAllowed : 1 {false};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	TObjectPtr<UAnimSequenceBase> QueuedTransitionAnimation{nullptr};
+	TObjectPtr<UAnimSequenceBase> QueuedTransitionSequence;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS", Meta = (ClampMin = 0, ForceUnits = "s"))
 	float QueuedTransitionBlendInDuration{0.0f};
@@ -31,5 +31,5 @@ struct ALS_API FAlsTransitionsState
 	uint8 bStopTransitionsQueued : 1 {false};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS", Meta = (ClampMin = 0, ForceUnits = "s"))
-	float QueuedStopTransitionsBlendOutDuration{0.0f};
+	float QueuedStopTransitionsBlendOutDuration{-1.0f};
 };

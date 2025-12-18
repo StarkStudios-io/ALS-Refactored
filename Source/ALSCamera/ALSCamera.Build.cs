@@ -2,21 +2,20 @@ using UnrealBuildTool;
 
 public class ALSCamera : ModuleRules
 {
-	public ALSCamera(ReadOnlyTargetRules Target) : base(Target)
+	public ALSCamera(ReadOnlyTargetRules target) : base(target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
 
-		bEnableNonInlinedGenCppWarnings = true;
+		// CppCompileWarningSettings.UnsafeTypeCastWarningLevel = WarningLevel.Warning;
+		CppCompileWarningSettings.NonInlinedGenCppWarningLevel = WarningLevel.Warning;
 
-		PublicDependencyModuleNames.AddRange(new[]
-		{
+		PublicDependencyModuleNames.AddRange([
 			"Core", "CoreUObject", "Engine", "GameplayTags", "ALS"
-		});
+		]);
 
-		PrivateDependencyModuleNames.AddRange(new[]
-		{
+		PrivateDependencyModuleNames.AddRange([
 			"EngineSettings"
-		});
+		]);
 	}
 }

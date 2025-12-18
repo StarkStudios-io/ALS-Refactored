@@ -2,29 +2,27 @@ using UnrealBuildTool;
 
 public class ALSEditor : ModuleRules
 {
-	public ALSEditor(ReadOnlyTargetRules Target) : base(Target)
+	public ALSEditor(ReadOnlyTargetRules target) : base(target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
 
-		bEnableNonInlinedGenCppWarnings = true;
+		// CppCompileWarningSettings.UnsafeTypeCastWarningLevel = WarningLevel.Warning;
+		CppCompileWarningSettings.NonInlinedGenCppWarningLevel = WarningLevel.Warning;
 
-		PublicDependencyModuleNames.AddRange(new[]
+		PublicDependencyModuleNames.AddRange([
+			"Core", "CoreUObject", "Engine", "AnimGraphRuntime", "AnimationModifiers", "AnimationBlueprintLibrary", "ALS"
+		]);
+
+		if (target.bBuildEditor)
 		{
-			"Core", "CoreUObject", "Engine", "AnimationModifiers", "AnimationBlueprintLibrary", "ALS"
-		});
-
-		if (Target.bBuildEditor)
-		{
-			PublicDependencyModuleNames.AddRange(new[]
-			{
+			PublicDependencyModuleNames.AddRange([
 				"AnimGraph"
-			});
+			]);
 
-			PrivateDependencyModuleNames.AddRange(new[]
-			{
+			PrivateDependencyModuleNames.AddRange([
 				"BlueprintGraph"
-			});
+			]);
 		}
 	}
 }

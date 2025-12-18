@@ -7,11 +7,11 @@
 #include "State/AlsDynamicTransitionsState.h"
 #include "State/AlsFeetState.h"
 #include "State/AlsGroundedState.h"
+#include "State/AlsHeadState.h"
 #include "State/AlsInAirState.h"
 #include "State/AlsLayeringState.h"
 #include "State/AlsLeanState.h"
 #include "State/AlsLocomotionAnimationState.h"
-#include "State/AlsLookState.h"
 #include "State/AlsMovementBaseState.h"
 #include "State/AlsPoseState.h"
 #include "State/AlsRagdollingAnimationState.h"
@@ -24,7 +24,6 @@
 #include "Utility/AlsGameplayTags.h"
 #include "AlsAnimationInstance.generated.h"
 
-struct FAlsFootLimitsSettings;
 class UAlsLinkedAnimationInstance;
 class AAlsCharacter;
 
@@ -43,17 +42,17 @@ protected:
 	TObjectPtr<AAlsCharacter> Character;
 
 	// Used to indicate that the animation instance has not been updated for a long time
-	// and its current state may not be correct (such as foot location used in foot locking).
+	// and its current state may not be correct (such as foot location used in foot lock).
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", Transient)
 	uint8 bPendingUpdate : 1 {true};
 
 	// Time of the last teleportation event.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", Transient, Meta = (ClampMin = 0))
-	double TeleportedTime;
+	double TeleportedTime{0.0f};
 
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", Transient)
-	uint8 bDisplayDebugTraces : 1;
+	uint8 bDisplayDebugTraces : 1 {false};
 
 	mutable TArray<TFunction<void()>> DisplayDebugTracesQueue;
 #endif
@@ -98,7 +97,7 @@ protected:
 	FAlsSpineState SpineState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", Transient)
-	FAlsLookState LookState;
+	FAlsHeadState HeadState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", Transient)
 	FAlsLocomotionAnimationState LocomotionState;
@@ -153,12 +152,10 @@ protected:
 	// Core
 
 protected:
-	UFUNCTION(BlueprintPure, Category = "ALS|Animation Instance",
-		Meta = (BlueprintProtected, BlueprintThreadSafe, ReturnDisplayName = "Setting"))
+	UFUNCTION(BlueprintPure, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe, ReturnDisplayName = "Setting"))
 	UAlsAnimationInstanceSettings* GetSettingsUnsafe() const;
 
-	UFUNCTION(BlueprintPure, Category = "ALS|Animation Instance",
-		Meta = (BlueprintProtected, BlueprintThreadSafe, ReturnDisplayName = "Rig Input"))
+	UFUNCTION(BlueprintPure, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe, ReturnDisplayName = "Rig Input"))
 	FAlsControlRigInput GetControlRigInput() const;
 
 public:
@@ -180,18 +177,22 @@ private:
 
 	void RefreshView(float DeltaTime);
 
+	// Spine
+
 public:
 	virtual bool IsSpineRotationAllowed();
 
 private:
 	void RefreshSpine(float SpineBlendAmount, float DeltaTime);
 
-protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
-	void InitializeLook();
+	// Head
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
-	void RefreshLook();
+protected:
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
+	void InitializeHead();
+
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
+	void RefreshHead();
 
 	// Locomotion
 
@@ -199,7 +200,7 @@ private:
 	void RefreshLocomotionOnGameThread();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void InitializeLean();
 
 	// Grounded
@@ -208,14 +209,14 @@ public:
 	void SetGroundedEntryMode(const FGameplayTag& NewGroundedEntryMode);
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void ResetGroundedEntryMode();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void InitializeGrounded();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshGrounded();
 
 private:
@@ -228,10 +229,10 @@ private:
 	void RefreshGroundedLean();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshGroundedMovement();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void SetHipsDirection(EAlsHipsDirection NewHipsDirection);
 
 private:
@@ -240,19 +241,19 @@ private:
 	void RefreshRotationYawOffsets(float ViewRelativeVelocityYawAngle);
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void InitializeStandingMovement();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshStandingMovement();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void ActivatePivot();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void ResetPivot();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshCrouchingMovement();
 
 	// In Air
@@ -264,7 +265,7 @@ private:
 	void RefreshInAirOnGameThread();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshInAir();
 
 	void RefreshGroundPrediction();
@@ -273,29 +274,16 @@ protected:
 
 	// Feet
 
-public:
-	// Temporarily "pauses" foot locking for one frame. This is not the same as a complete
-	// shutdown because the internal state of the foot locking will continue to update.
-	void InhibitFootLockForOneFrame();
-
 private:
 	void RefreshFeetOnGameThread();
 
 	void RefreshFeet(float DeltaTime);
 
-	void RefreshFoot(FAlsFootState& FootState, const FName& FootIkCurveName, const FName& FootLockCurveName,
-	                 const FAlsFootLimitsSettings& LimitsSettings, const FTransform& ComponentTransformInverse, float DeltaTime) const;
+	void ProcessFootLockTeleport(const FAlsFootUpdateContext& Context) const;
 
-	void ProcessFootLockTeleport(FAlsFootState& FootState) const;
+	void ProcessFootLockBaseChange(const FAlsFootUpdateContext& Context) const;
 
-	void ProcessFootLockBaseChange(FAlsFootState& FootState, const FTransform& ComponentTransformInverse) const;
-
-	void RefreshFootLock(FAlsFootState& FootState, const FName& FootLockCurveName, const FTransform& ComponentTransformInverse,
-	                     float DeltaTime, FVector& FinalLocation, FQuat& FinalRotation) const;
-
-	void RefreshFootOffset(FAlsFootState& FootState, float DeltaTime, FVector& FinalLocation, FQuat& FinalRotation) const;
-
-	void LimitFootRotation(const FAlsFootLimitsSettings& LimitsSettings, const FQuat& ParentRotation, FQuat& Rotation) const;
+	void RefreshFootLock(const FAlsFootUpdateContext& Context) const;
 
 	// Transitions
 
@@ -304,7 +292,7 @@ public:
 	void PlayQuickStopAnimation();
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
-	void PlayTransitionAnimation(UAnimSequenceBase* Animation, float BlendInDuration = 0.2f, float BlendOutDuration = 0.2f,
+	void PlayTransitionAnimation(UAnimSequenceBase* Sequence, float BlendInDuration = 0.2f, float BlendOutDuration = 0.2f,
 	                             float PlayRate = 1.0f, float StartTime = 0.0f, bool bFromStandingIdleOnly = false);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
@@ -316,10 +304,10 @@ public:
 	                                  float StartTime = 0.0f, bool bFromStandingIdleOnly = false);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
-	void StopTransitionAndTurnInPlaceAnimations(float BlendOutDuration = 0.2f);
+	void StopTransitionAndTurnInPlaceAnimations(float BlendOutDuration = -1.0f);
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshDynamicTransitions();
 
 private:
@@ -335,7 +323,7 @@ public:
 	virtual bool IsRotateInPlaceAllowed();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshRotateInPlace();
 
 	// Turn In Place
@@ -344,10 +332,10 @@ public:
 	virtual bool IsTurnInPlaceAllowed();
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void InitializeTurnInPlace();
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintProtected, BlueprintThreadSafe))
+	UFUNCTION(BlueprintCallable, Category = "ALS|Animation Instance", Meta = (BlueprintThreadSafe))
 	void RefreshTurnInPlace();
 
 private:

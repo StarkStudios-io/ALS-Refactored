@@ -24,24 +24,18 @@ struct ALS_API FAlsControlRigInput
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS", Meta = (ClampMin = -180, ClampMax = 180, ForceUnits = "deg"))
 	float SpineYawAngle{0.0f};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	FQuat FootLeftIkRotation{ForceInit};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	FVector FootLeftIkLocation{ForceInit};
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS", Meta = (ClampMin = 0, ClampMax = 1))
-	float FootLeftIkAmount{0.0f};
+	float PelvisOffsetAmount{0.0f};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	FQuat FootRightIkRotation{ForceInit};
+	FVector FootLeftLocation{ForceInit};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	FVector FootRightIkLocation{ForceInit};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS", Meta = (ClampMin = 0, ClampMax = 1))
-	float FootRightIkAmount{0.0f};
+	FQuat FootLeftRotation{ForceInit};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
-	FVector2f MinMaxPelvisOffsetZ{ForceInit};
+	FVector FootRightLocation{ForceInit};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ALS")
+	FQuat FootRightRotation{ForceInit};
 };

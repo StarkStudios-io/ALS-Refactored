@@ -16,13 +16,15 @@ protected:
 public:
 	UAlsAnimGraphNode_GameplayTagsBlend();
 
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& ChangedEvent) override;
 
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 
 	virtual FText GetTooltipText() const override;
 
 	virtual void ReallocatePinsDuringReconstruction(TArray<UEdGraphPin*>& PreviousPins) override;
+
+	virtual FText GetMenuCategory() const override;
 
 	virtual FString GetNodeCategory() const override;
 
